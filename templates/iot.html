@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IoT Live Tracking - FarmLinks</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: #f5f9f5; color: #1a2e1a; }
+
+        /* NAVBAR */
+        .navbar {
+            background: white;
+            padding: 18px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon { font-size: 28px; }
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2E7D32, #43A047);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .user-badge {
+            background: linear-gradient(135deg, #00838F, #00ACC1);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* HERO */
+        .iot-hero {
+            background: linear-gradient(135deg, #006064, #00838F);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .iot-hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(0,255,255,0.1) 0%, transparent 50%);
+            animation: pulse-bg 4s infinite;
+        }
+        @keyframes pulse-bg {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        .iot-hero h1 { font-size: 2.5em; font-weight: 800; margin-bottom: 10px; position: relative; }
+        .iot-hero p { font-size: 1.1em; opacity: 0.9; position: relative; }
+
+        .container {
+            max-width: 1400px;
+            margin: -30px auto 50px;
+            padding: 0 20px;
+        }
+
+        /* LIVE BANNER */
+        .live-banner {
+            background: linear-gradient(135deg, #00838F, #00ACC1);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 10px 40px rgba(0,131,143,0.2);
+        }
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .live-dot {
+            width: 12px;
+            height: 12px;
+            background: #00FF88;
+            border-radius: 50%;
+            animation: pulse-live 1.5s infinite;
+            box-shadow: 0 0 15px #00FF88;
+        }
+        @keyframes pulse-live {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+        }
+        .refresh-counter {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        /* STATS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+            transition: transform 0.3s;
+        }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-icon { font-size: 2em; margin-bottom: 8px; }
+        .stat-value { font-size: 2em; font-weight: 800; color: #00838F; }
+        .stat-label { color: #888; font-size: 0.9em; margin-top: 4px; }
+
+        /* DELIVERY TRACKING CARDS */
+        .tracking-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 25px;
+        }
+        @media (max-width: 600px) {
+            .tracking-grid { grid-template-columns: 1fr; }
+        }
+        
+        .tracking-card {
+            background: white;
+            padding: 25px;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+        .tracking-card:hover { box-shadow: 0 15px 50px rgba(0,0,0,0.12); }
+
+        .tracking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .tracking-title {
+            font-size: 1.3em;
+            font-weight: 800;
+            color: #006064;
+        }
+        .delivery-id {
+            background: #E0F7FA;
+            color: #00838F;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 700;
+        }
+        .route-info {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        /* SENSOR GRID */
+        .sensor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .sensor-card {
+            background: linear-gradient(135deg, #f9f9f9, #f0f9f9);
+            padding: 18px;
+            border-radius: 15px;
+            border-left: 4px solid #00838F;
+            position: relative;
+            overflow: hidden;
+        }
+        .sensor-card.optimal { border-left-color: #4CAF50; }
+        .sensor-card.warning { border-left-color: #FF9800; }
+        .sensor-card.critical { border-left-color: #F44336; animation: critical-pulse 1.5s infinite; }
+        
+        @keyframes critical-pulse {
+            0%, 100% { background: linear-gradient(135deg, #FFEBEE, #FFCDD2); }
+            50% { background: linear-gradient(135deg, #FFCDD2, #EF9A9A); }
+        }
+
+        .sensor-label {
+            font-size: 0.8em;
+            color: #888;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .sensor-value {
+            font-size: 1.8em;
+            font-weight: 800;
+            color: #006064;
+        }
+        .sensor-optimal {
+            font-size: 0.75em;
+            color: #888;
+            margin-top: 3px;
+        }
+        .status-pill {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.7em;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .status-pill.optimal { background: #C8E6C9; color: #2E7D32; }
+        .status-pill.warning { background: #FFE0B2; color: #E65100; }
+        .status-pill.critical { background: #FFCDD2; color: #C62828; }
+
+        /* GPS & SPEED */
+        .gps-card {
+            background: linear-gradient(135deg, #006064, #00838F);
+            color: white;
+            padding: 20px;
+            border-radius: 18px;
+            margin-bottom: 15px;
+        }
+        .gps-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .gps-label { opacity: 0.8; font-size: 0.85em; }
+        .gps-value { font-weight: 700; }
+
+        /* PROGRESS BAR */
+        .delivery-progress {
+            margin: 15px 0;
+        }
+        .progress-track {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #00838F, #00ACC1);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease;
+            box-shadow: 0 0 10px rgba(0,131,143,0.5);
+        }
+
+        /* ALERTS */
+        .alerts-section { margin-top: 15px; }
+        .alert {
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .alert-success { background: #E8F5E9; color: #2E7D32; border-left: 4px solid #4CAF50; }
+        .alert-warning { background: #FFF3E0; color: #E65100; border-left: 4px solid #FF9800; }
+        .alert-danger { background: #FFEBEE; color: #C62828; border-left: 4px solid #F44336; }
+
+        /* TIMESTAMP */
+        .last-update {
+            text-align: right;
+            font-size: 0.8em;
+            color: #888;
+            margin-top: 10px;
+        }
+        .last-update .live-dot-mini {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #4CAF50;
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: pulse-live 1.5s infinite;
+        }
+
+        /* BATTERY */
+        .battery-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .battery-track {
+            background: rgba(255,255,255,0.2);
+            height: 6px;
+            border-radius: 5px;
+            flex: 1;
+            overflow: hidden;
+        }
+        .battery-fill { background: #4ade80; height: 100%; border-radius: 5px; }
+
+        /* TOP NAV */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-top: 15px;
+        }
+        .back-btn {
+            color: #00838F;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+        .empty .icon { font-size: 70px; margin-bottom: 15px; }
+        .empty h3 { color: #006064; margin-bottom: 10px; font-size: 1.5em; }
+        .empty p { color: #888; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="/" class="nav-logo">
+            <span class="logo-icon">🌾</span>
+            <span class="logo-text">FarmLinks</span>
+        </a>
+        <div class="user-badge">
+            <span>📡</span>
+            <span>IoT Live Tracking</span>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="iot-hero">
+        <h1>📡 IoT Live Monitoring</h1>
+        <p>Real-time cold-chain tracking • GPS positioning • Smart alerts</p>
+    </div>
+
+    <div class="container">
+
+        <div class="top-nav">
+            <a href="/" class="back-btn">← Back to Home</a>
+        </div>
+
+        <!-- LIVE BANNER -->
+        <div class="live-banner">
+            <div class="live-indicator">
+                <div class="live-dot"></div>
+                <div>
+                    <div style="font-weight: 800; font-size: 1.1em;">🟢 LIVE — Sensors Active</div>
+                    <div style="opacity: 0.9; font-size: 0.85em;">Auto-refreshing every 3 seconds</div>
+                </div>
+            </div>
+            <div class="refresh-counter">
+                ⏱️ Next refresh in: <span id="countdown">3</span>s
+            </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🚛</div>
+                <div class="stat-value">{{ deliveries|length }}</div>
+                <div class="stat-label">Active Shipments</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📡</div>
+                <div class="stat-value">{{ deliveries|length * 4 }}</div>
+                <div class="stat-label">Sensors Online</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value" id="optimalCount">--</div>
+                <div class="stat-label">Optimal Conditions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚠️</div>
+                <div class="stat-value" id="alertCount">--</div>
+                <div class="stat-label">Active Alerts</div>
+            </div>
+        </div>
+
+        <!-- TRACKING CARDS -->
+        {% if deliveries %}
+        <div class="tracking-grid">
+            {% for d in deliveries %}
+            {% set iot = iot_data[d[0]] %}
+            <div class="tracking-card" data-delivery-id="{{ d[0] }}">
+                
+                <div class="tracking-header">
+                    <div>
+                        <div class="tracking-title">🌾 {{ d[3] }} ({{ d[4] }}kg)</div>
+                        <div class="route-info">📍 {{ d[5] }} → {{ d[6] }}</div>
+                        <div class="route-info">👨‍🌾 {{ d[1] }} • 🚛 {{ d[10] or 'Unassigned' }}</div>
+                    </div>
+                    <div class="delivery-id">#{{ d[0] }}</div>
+                </div>
+
+                <!-- SENSORS -->
+                <div class="sensor-grid">
+                    <div class="sensor-card {{ iot.temp_status }}" id="temp-{{ d[0] }}">
+                        <span class="status-pill {{ iot.temp_status }}">{{ iot.temp_status }}</span>
+                        <div class="sensor-label">🌡️ Temperature</div>
+                        <div class="sensor-value"><span class="temp-val">{{ iot.temperature }}</span>°C</div>
+                        <div class="sensor-optimal">Optimal: {{ iot.optimal_temp }}</div>
+                    </div>
+                    <div class="sensor-card {{ iot.humidity_status }}" id="humidity-{{ d[0] }}">
+                        <span class="status-pill {{ iot.humidity_status }}">{{ iot.humidity_status }}</span>
+                        <div class="sensor-label">💧 Humidity</div>
+                        <div class="sensor-value"><span class="humidity-val">{{ iot.humidity }}</span>%</div>
+                        <div class="sensor-optimal">Optimal: {{ iot.optimal_humidity }}</div>
+                    </div>
+                </div>
+
+                <!-- GPS & SPEED -->
+                <div class="gps-card">
+                    <div class="gps-row">
+                        <span class="gps-label">📍 GPS Location</span>
+                        <span class="gps-value"><span class="lat-val">{{ iot.lat }}</span>, <span class="lng-val">{{ iot.lng }}</span></span>
+                    </div>
+                    <div class="gps-row">
+                        <span class="gps-label">🚗 Speed</span>
+                        <span class="gps-value"><span class="speed-val">{{ iot.speed }}</span> km/h</span>
+                    </div>
+                    <div class="gps-row">
+                        <span class="gps-label">🔋 Sensor Battery</span>
+                        <span class="gps-value"><span class="battery-val">{{ iot.battery }}</span>%</span>
+                    </div>
+                    <div class="battery-bar">
+                        <div class="battery-track">
+                            <div class="battery-fill" style="width: {{ iot.battery }}%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DELIVERY PROGRESS -->
+                <div class="delivery-progress">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85em; color: #666;">
+                        <span>Pickup</span>
+                        <span><strong>{{ d[9] }}</strong></span>
+                        <span>Delivery</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: {% if d[9] == 'In Progress' %}65{% else %}25{% endif %}%;"></div>
+                    </div>
+                </div>
+
+                <!-- ALERTS -->
+                <div class="alerts-section" id="alerts-{{ d[0] }}">
+                    {% for alert in iot.alerts %}
+                    <div class="alert alert-{{ alert.type }}">{{ alert.msg }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- TIMESTAMP -->
+                <div class="last-update">
+                    <span class="live-dot-mini"></span>
+                    Last update: <span class="timestamp-val">{{ iot.timestamp }}</span>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty">
+            <div class="icon">📡</div>
+            <h3>No Active Shipments</h3>
+            <p>Once a delivery is assigned to a driver, real-time IoT tracking will appear here.</p>
+            <p style="margin-top: 15px;">
+                <a href="/farmer" style="color: #00838F; font-weight: 700; text-decoration: none;">→ Create a delivery request</a>
+            </p>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <!-- AUTO-REFRESH SCRIPT -->
+    <script>
+        const deliveryIds = [{% for d in deliveries %}{{ d[0] }}{% if not loop.last %},{% endif %}{% endfor %}];
+        let countdown = 3;
+
+        function updateCountdown() {
+            document.getElementById('countdown').textContent = countdown;
+            countdown--;
+            if (countdown < 0) {
+                countdown = 3;
+                refreshAllSensors();
+            }
+        }
+
+        async function refreshSensor(id) {
+            try {
+                const response = await fetch(`/api/iot/${id}`);
+                const data = await response.json();
+                
+                const card = document.querySelector(`[data-delivery-id="${id}"]`);
+                if (!card) return;
+
+                // Update temperature
+                const tempCard = card.querySelector(`#temp-${id}`);
+                tempCard.querySelector('.temp-val').textContent = data.temperature;
+                tempCard.className = `sensor-card ${data.temp_status}`;
+                tempCard.querySelector('.status-pill').className = `status-pill ${data.temp_status}`;
+                tempCard.querySelector('.status-pill').textContent = data.temp_status;
+
+                // Update humidity
+                const humCard = card.querySelector(`#humidity-${id}`);
+                humCard.querySelector('.humidity-val').textContent = data.humidity;
+                humCard.className = `sensor-card ${data.humidity_status}`;
+                humCard.querySelector('.status-pill').className = `status-pill ${data.humidity_status}`;
+                humCard.querySelector('.status-pill').textContent = data.humidity_status;
+
+                // Update GPS, Speed, Battery
+                card.querySelector('.lat-val').textContent = data.lat;
+                card.querySelector('.lng-val').textContent = data.lng;
+                card.querySelector('.speed-val').textContent = data.speed;
+                card.querySelector('.battery-val').textContent = data.battery;
+                card.querySelector('.battery-fill').style.width = data.battery + '%';
+
+                // Update timestamp
+                card.querySelector('.timestamp-val').textContent = data.timestamp;
+
+                // Update alerts
+                const alertsContainer = document.getElementById(`alerts-${id}`);
+                alertsContainer.innerHTML = '';
+                data.alerts.forEach(alert => {
+                    const div = document.createElement('div');
+                    div.className = `alert alert-${alert.type}`;
+                    div.textContent = alert.msg;
+                    alertsContainer.appendChild(div);
+                });
+            } catch (error) {
+                console.error('Refresh error:', error);
+            }
+        }
+
+        function refreshAllSensors() {
+            deliveryIds.forEach(id => refreshSensor(id));
+            updateStats();
+        }
+
+        function updateStats() {
+            const optimalCards = document.querySelectorAll('.sensor-card.optimal').length;
+            const alerts = document.querySelectorAll('.alert-warning, .alert-danger').length;
+            
+            document.getElementById('optimalCount').textContent = optimalCards;
+            document.getElementById('alertCount').textContent = alerts;
+        }
+
+        // Initial stats
+        updateStats();
+
+        // Start countdown
+        setInterval(updateCountdown, 1000);
+    </script>
+
+</body>
+</html>

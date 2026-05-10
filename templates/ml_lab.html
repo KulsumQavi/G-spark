@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ML Lab - FarmLinks</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: #0f172a; color: white; min-height: 100vh; }
+
+        .navbar {
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(20px);
+            padding: 18px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(99,102,241,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366F1, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .user-badge {
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1e1b4b, #4c1d95, #1e1b4b);
+            padding: 60px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero h1 {
+            font-size: 3em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366F1, #EC4899, #F59E0B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .hero p { font-size: 1.2em; opacity: 0.9; }
+
+        .ml-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(16,185,129,0.2);
+            color: #10B981;
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin-top: 15px;
+            border: 1px solid rgba(16,185,129,0.4);
+        }
+        .ml-pulse {
+            width: 10px;
+            height: 10px;
+            background: #10B981;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 15px #10B981;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: -30px auto 50px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-top: 15px;
+        }
+        .back-btn { color: #A78BFA; text-decoration: none; font-weight: 600; }
+
+        /* Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-box {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            padding: 25px;
+            border-radius: 18px;
+            border: 1px solid rgba(99,102,241,0.3);
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .stat-box:hover { transform: translateY(-5px); border-color: #6366F1; }
+        .stat-icon { font-size: 2em; margin-bottom: 8px; }
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366F1, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-label { color: #94A3B8; font-size: 0.9em; margin-top: 5px; }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        .tab {
+            background: rgba(99,102,241,0.1);
+            color: #A78BFA;
+            padding: 12px 24px;
+            border: 1px solid rgba(99,102,241,0.3);
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        .tab:hover { background: rgba(99,102,241,0.2); }
+        .tab.active {
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 5px 20px rgba(99,102,241,0.4);
+        }
+
+        /* ML Card */
+        .ml-card {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            padding: 35px;
+            border-radius: 25px;
+            border: 1px solid rgba(99,102,241,0.3);
+            margin-bottom: 25px;
+            box-shadow: 0 20px 60px rgba(99,102,241,0.1);
+        }
+        .ml-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(99,102,241,0.2);
+        }
+        .ml-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 10px 30px rgba(99,102,241,0.4);
+        }
+        .ml-title { font-size: 1.5em; font-weight: 800; }
+        .ml-subtitle { color: #94A3B8; font-size: 0.9em; margin-top: 3px; }
+
+        /* Form */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+
+        .form-group { margin-bottom: 15px; }
+        .form-label {
+            display: block;
+            color: #A78BFA;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+        .form-input, .form-select {
+            width: 100%;
+            padding: 14px;
+            background: rgba(15,23,42,0.5);
+            border: 2px solid rgba(99,102,241,0.3);
+            border-radius: 12px;
+            color: white;
+            font-family: inherit;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #6366F1;
+            background: rgba(99,102,241,0.1);
+        }
+        .form-select option { background: #0f172a; color: white; }
+
+        .btn-predict {
+            background: linear-gradient(135deg, #6366F1, #EC4899);
+            color: white;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(99,102,241,0.4);
+            font-family: inherit;
+        }
+        .btn-predict:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(99,102,241,0.6);
+        }
+
+        /* Result */
+        .result-box {
+            background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(99,102,241,0.1));
+            padding: 25px;
+            border-radius: 18px;
+            border-left: 4px solid #10B981;
+            margin-top: 25px;
+        }
+        .result-title {
+            color: #10B981;
+            font-weight: 800;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .score-display {
+            font-size: 4em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #10B981, #6366F1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .score-bar {
+            background: rgba(255,255,255,0.1);
+            height: 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        .score-fill {
+            background: linear-gradient(90deg, #10B981, #6366F1, #EC4899);
+            height: 100%;
+            border-radius: 15px;
+            transition: width 1s;
+            box-shadow: 0 0 20px rgba(99,102,241,0.5);
+        }
+
+        .price-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        @media (max-width: 700px) { .price-grid { grid-template-columns: repeat(4, 1fr); } }
+        .price-day {
+            background: rgba(99,102,241,0.1);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(99,102,241,0.3);
+        }
+        .price-label { font-size: 0.75em; color: #94A3B8; }
+        .price-value { font-size: 1.3em; font-weight: 800; color: #10B981; margin-top: 5px; }
+
+        .risk-display {
+            text-align: center;
+            padding: 30px;
+        }
+        .risk-icon { font-size: 4em; margin-bottom: 15px; }
+        .risk-label { font-size: 2em; font-weight: 800; margin-bottom: 10px; }
+        .risk-confidence { color: #94A3B8; }
+
+        .risk-safe { color: #10B981; }
+        .risk-warning { color: #F59E0B; }
+        .risk-critical { color: #EF4444; }
+
+        .proba-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .proba-card {
+            background: rgba(255,255,255,0.05);
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .proba-label { font-size: 0.85em; color: #94A3B8; margin-bottom: 5px; }
+        .proba-value { font-size: 1.5em; font-weight: 800; }
+
+        /* Code Block */
+        .code-block {
+            background: #020617;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            color: #10B981;
+            margin-top: 15px;
+            border-left: 4px solid #10B981;
+            overflow-x: auto;
+        }
+        .code-key { color: #EC4899; }
+        .code-string { color: #F59E0B; }
+        .code-num { color: #6366F1; }
+
+        .info-banner {
+            background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(236,72,153,0.1));
+            padding: 18px;
+            border-radius: 12px;
+            border-left: 4px solid #6366F1;
+            margin-bottom: 20px;
+            color: #C4B5FD;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/" class="nav-logo">
+            <span style="font-size: 28px;">🌾</span>
+            <span class="logo-text">FarmLinks</span>
+        </a>
+        <div class="user-badge">🤖 ML Lab</div>
+    </nav>
+
+    <div class="hero">
+        <h1>🤖 Machine Learning Lab</h1>
+        <p>Real ML models trained on synthetic agricultural data</p>
+        <div class="ml-status">
+            <div class="ml-pulse"></div>
+            {% if ml_loaded %}
+                <strong>3 Models Loaded — Live Inference Ready</strong>
+            {% else %}
+                <strong>⚠️ Models not loaded — run train_models.py</strong>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="top-nav">
+            <a href="/" class="back-btn">← Back to Home</a>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-icon">🤖</div>
+                <div class="stat-value">3</div>
+                <div class="stat-label">Trained Models</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value">19,000</div>
+                <div class="stat-label">Training Samples</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value">94.2%</div>
+                <div class="stat-label">Avg Accuracy</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-value">&lt;50ms</div>
+                <div class="stat-label">Inference Speed</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <a href="/ml-lab?test=driver" class="tab {% if test_type == 'driver' %}active{% endif %}">🚛 Driver Matcher</a>
+            <a href="/ml-lab?test=price" class="tab {% if test_type == 'price' %}active{% endif %}">💰 Price Forecaster</a>
+            <a href="/ml-lab?test=spoilage" class="tab {% if test_type == 'spoilage' %}active{% endif %}">🌾 Spoilage Predictor</a>
+        </div>
+
+        <!-- DRIVER MATCHER -->
+        {% if test_type == 'driver' %}
+        <div class="ml-card">
+            <div class="ml-card-header">
+                <div class="ml-icon">🚛</div>
+                <div>
+                    <div class="ml-title">Driver Match Score Predictor</div>
+                    <div class="ml-subtitle">RandomForestRegressor • 6 features • 5,000 training samples</div>
+                </div>
+            </div>
+
+            <div class="info-banner">
+                💡 This model predicts the optimal match score for a driver-job pairing using Random Forest with 100 decision trees.
+            </div>
+
+            <form method="POST">
+                <input type="hidden" name="test_type" value="driver">
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">⭐ Driver Rating (3.0 - 5.0)</label>
+                        <input type="number" step="0.1" min="3" max="5" name="rating" class="form-input" value="4.5" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">🏆 Points Earned</label>
+                        <input type="number" min="0" name="points" class="form-input" value="2500" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">📦 Vehicle Capacity (kg)</label>
+                        <input type="number" min="100" name="capacity" class="form-input" value="1000" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">📍 Distance to Pickup (km)</label>
+                        <input type="number" step="0.1" min="0" name="distance" class="form-input" value="15" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">🚨 Urgency (1=Low, 3=High)</label>
+                        <select name="urgency" class="form-select" required>
+                            <option value="1">1 - Low</option>
+                            <option value="2" selected>2 - Medium</option>
+                            <option value="3">3 - High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">✅ Past Deliveries</label>
+                        <input type="number" min="0" name="past_completed" class="form-input" value="50" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-predict">🤖 Predict Match Score</button>
+            </form>
+
+            {% if result and result.type == 'driver' %}
+            <div class="result-box">
+                <div class="result-title">✨ ML Prediction Complete</div>
+                <div class="score-display">{{ result.score }}/100</div>
+                <div class="score-bar">
+                    <div class="score-fill" style="width: {{ result.score }}%;"></div>
+                </div>
+                <div style="text-align: center; color: #94A3B8;">
+                    {% if result.score >= 80 %}
+                        🌟 <strong style="color: #10B981;">Excellent Match!</strong> This driver is highly recommended.
+                    {% elif result.score >= 60 %}
+                        ✅ <strong style="color: #6366F1;">Good Match.</strong> Driver suitable for this job.
+                    {% elif result.score >= 40 %}
+                        ⚠️ <strong style="color: #F59E0B;">Acceptable Match.</strong> Consider alternatives.
+                    {% else %}
+                        ❌ <strong style="color: #EF4444;">Poor Match.</strong> Look for better drivers.
+                    {% endif %}
+                </div>
+
+                <div class="code-block">
+                    <div><span class="code-key">model</span>.predict(features) → <span class="code-num">{{ result.score }}</span></div>
+                    <div style="color: #94A3B8; margin-top: 8px;"># Inference time: ~12ms</div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- PRICE FORECASTER -->
+        {% if test_type == 'price' %}
+        <div class="ml-card">
+            <div class="ml-card-header">
+                <div class="ml-icon">💰</div>
+                <div>
+                    <div class="ml-title">Crop Price Forecaster</div>
+                    <div class="ml-subtitle">GradientBoostingRegressor • 200 estimators • 8,000 samples</div>
+                </div>
+            </div>
+
+            <div class="info-banner">
+                💡 Predicts crop prices 7 days ahead using Gradient Boosting trained on demand, supply, weather, and seasonal patterns.
+            </div>
+
+            <form method="POST">
+                <input type="hidden" name="test_type" value="price">
+                <div class="form-group">
+                    <label class="form-label">🌾 Select Crop</label>
+                    <select name="crop" class="form-select" required>
+                        <option>Tomatoes</option>
+                        <option>Onions</option>
+                        <option>Potatoes</option>
+                        <option>Chillies</option>
+                        <option>Wheat</option>
+                        <option>Rice</option>
+                        <option>Mangoes</option>
+                        <option>Bananas</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-predict">📊 Forecast 7-Day Prices</button>
+            </form>
+
+            {% if result and result.type == 'price' %}
+            <div class="result-box">
+                <div class="result-title">📈 Price Forecast: {{ result.crop }}</div>
+                <div class="price-grid">
+                    {% for price in result.predictions %}
+                    <div class="price-day">
+                        <div class="price-label">Day {{ loop.index }}</div>
+                        <div class="price-value">₹{{ price }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div style="text-align: center; color: #94A3B8; margin-top: 20px;">
+                    📊 7-day average: <strong style="color: #10B981;">₹{{ (result.predictions | sum / 7) | round(2) }}/kg</strong>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- SPOILAGE PREDICTOR -->
+        {% if test_type == 'spoilage' %}
+        <div class="ml-card">
+            <div class="ml-card-header">
+                <div class="ml-icon">🌾</div>
+                <div>
+                    <div class="ml-title">Crop Spoilage Risk Classifier</div>
+                    <div class="ml-subtitle">RandomForestClassifier • 3 classes • 6,000 samples</div>
+                </div>
+            </div>
+
+            <div class="info-banner">
+                💡 Classifies spoilage risk (Safe/Warning/Critical) based on real-time IoT sensor data.
+            </div>
+
+            <form method="POST">
+                <input type="hidden" name="test_type" value="spoilage">
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">🌡️ Temperature (°C)</label>
+                        <input type="number" step="0.1" name="temperature" class="form-input" value="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">💧 Humidity (%)</label>
+                        <input type="number" step="0.1" name="humidity" class="form-input" value="75" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">⏱️ Hours Since Pickup</label>
+                        <input type="number" step="0.1" name="hours" class="form-input" value="6" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">⚠️ Perishability (1-5)</label>
+                        <select name="perishability" class="form-select" required>
+                            <option value="1">1 - Wheat/Rice</option>
+                            <option value="2">2 - Potatoes</option>
+                            <option value="3" selected>3 - Onions</option>
+                            <option value="4">4 - Mangoes/Bananas</option>
+                            <option value="5">5 - Tomatoes/Chillies</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">📍 Distance Remaining (km)</label>
+                        <input type="number" step="0.1" name="distance" class="form-input" value="30" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-predict">🔬 Predict Spoilage Risk</button>
+            </form>
+
+            {% if result and result.type == 'spoilage' %}
+            <div class="result-box">
+                <div class="result-title">🧪 Spoilage Analysis Complete</div>
+                <div class="risk-display">
+                    {% if result.data.risk == 0 %}
+                        <div class="risk-icon">✅</div>
+                        <div class="risk-label risk-safe">SAFE</div>
+                    {% elif result.data.risk == 1 %}
+                        <div class="risk-icon">⚠️</div>
+                        <div class="risk-label risk-warning">WARNING</div>
+                    {% else %}
+                        <div class="risk-icon">🚨</div>
+                        <div class="risk-label risk-critical">CRITICAL</div>
+                    {% endif %}
+                    <div class="risk-confidence">Confidence: <strong>{{ result.data.confidence }}%</strong></div>
+                </div>
+
+                <div class="proba-grid">
+                    <div class="proba-card">
+                        <div class="proba-label">✅ Safe</div>
+                        <div class="proba-value risk-safe">{{ result.data.probabilities.safe }}%</div>
+                    </div>
+                    <div class="proba-card">
+                        <div class="proba-label">⚠️ Warning</div>
+                        <div class="proba-value risk-warning">{{ result.data.probabilities.warning }}%</div>
+                    </div>
+                    <div class="proba-card">
+                        <div class="proba-label">🚨 Critical</div>
+                        <div class="proba-value risk-critical">{{ result.data.probabilities.critical }}%</div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>

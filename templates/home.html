@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmLinks - Cultivating Connections, Growing Together</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- 🌲 FOREST WHISPER PALETTE -->
+    <style>
+        /* ===== CORE COLOR OVERRIDE ===== */
+        :root {
+            --forest-dark: #3A4D2C;
+            --forest-medium: #5A7045;
+            --olive-sage: #7A9159;
+            --mint-light: #C9D6AA;
+            --cream: #F7F4E9;
+            --cream-warm: #EDE9D8;
+        }
+
+        body {
+            background: linear-gradient(135deg, #F7F4E9 0%, #FAF7EC 50%, #F2EEE0 100%) !important;
+            color: #2A3820 !important;
+        }
+
+        /* Section backgrounds */
+        .login-section { 
+            background: linear-gradient(135deg, #F7F4E9 0%, #FAF7EC 100%) !important; 
+        }
+        .features-section { 
+            background: linear-gradient(135deg, #FAF7EC 0%, #F2EEE0 100%) !important; 
+        }
+        .how-section { 
+            background: linear-gradient(135deg, #C9D6AA 0%, #B8C998 100%) !important;
+        }
+        .tech-section { 
+            background: linear-gradient(135deg, #F7F4E9 0%, #FAF7EC 100%) !important; 
+        }
+        .testimonials-section { 
+            background: linear-gradient(135deg, #FAF7EC 0%, #F2EEE0 100%) !important;
+        }
+        .cta-section { 
+            background: linear-gradient(135deg, #F7F4E9 0%, #EDE9D8 100%) !important;
+        }
+
+        /* ===== HERO — DEEP FOREST GRADIENT ===== */
+        .hero {
+            background: linear-gradient(135deg, #1F2D14 0%, #3A4D2C 30%, #5A7045 70%, #7A9159 100%) !important;
+        }
+        .hero-wave svg path { fill: #F7F4E9 !important; }
+
+        .hero-title { color: #F7F4E9 !important; }
+        .gradient-text {
+            background: linear-gradient(135deg, #C9D6AA 0%, #E0E8C0 50%, #F0E8C8 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+        .hero-subtitle { color: #F7F4E9 !important; opacity: 0.95; }
+        .hero-subtitle strong { color: #C9D6AA !important; }
+
+        .stat-number {
+            background: linear-gradient(135deg, #C9D6AA, #F0E8C8) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+        .stat-suffix { color: #C9D6AA !important; }
+
+        .hero-cta.primary {
+            background: linear-gradient(135deg, #C9D6AA, #B8C998) !important;
+            color: #2A3820 !important;
+            box-shadow: 0 10px 30px rgba(201,214,170,0.4) !important;
+        }
+        .hero-cta.primary:hover {
+            background: linear-gradient(135deg, #F7F4E9, #C9D6AA) !important;
+            box-shadow: 0 15px 40px rgba(201,214,170,0.6) !important;
+        }
+
+        .orb-1 { background: radial-gradient(circle, #7A9159, transparent) !important; }
+        .orb-2 { background: radial-gradient(circle, #C9D6AA, transparent) !important; }
+        .orb-3 { background: radial-gradient(circle, #5A7045, transparent) !important; }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: rgba(247, 244, 233, 0.85) !important;
+            border-bottom: 1px solid rgba(58,77,44,0.15) !important;
+        }
+        .navbar.scrolled {
+            background: rgba(247, 244, 233, 0.98) !important;
+            box-shadow: 0 10px 40px rgba(58,77,44,0.1) !important;
+        }
+        .logo-text {
+            background: linear-gradient(135deg, #3A4D2C, #7A9159) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+        .nav-links a { color: #3A4D2C !important; }
+        .nav-links a:hover { color: #7A9159 !important; }
+        .nav-cta {
+            background: linear-gradient(135deg, #3A4D2C, #5A7045) !important;
+            color: #F7F4E9 !important;
+            box-shadow: 0 4px 15px rgba(58,77,44,0.3) !important;
+        }
+        .nav-cta:hover {
+            box-shadow: 0 8px 25px rgba(58,77,44,0.5) !important;
+        }
+        .nav-links a:not(.nav-cta)::after {
+            background: linear-gradient(90deg, #3A4D2C, #7A9159) !important;
+        }
+
+        /* ===== SECTION HEADERS ===== */
+        .section-header h2 {
+            color: #2A3820 !important;
+            font-weight: 800 !important;
+        }
+        .section-header p {
+            color: #5A6B45 !important;
+        }
+        .section-tag {
+            background: linear-gradient(135deg, #C9D6AA, #B8C998) !important;
+            color: #3A4D2C !important;
+        }
+        .highlight {
+            background: linear-gradient(135deg, #3A4D2C, #7A9159, #5A7045) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+
+        /* ===== CARD LAYOUTS ===== */
+        .cards-row-3 {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .cards-row-4 {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        @media (max-width: 1200px) {
+            .cards-row-4 { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 900px) {
+            .cards-row-3 { grid-template-columns: 1fr; }
+            .cards-row-4 { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            width: 100% !important;
+            max-width: none !important;
+            min-height: 480px;
+            display: flex;
+            flex-direction: column;
+            padding: 35px 25px !important;
+            background: #FFFFFF !important;
+            border: 1px solid rgba(58,77,44,0.1) !important;
+        }
+        .card-features { flex-grow: 1; }
+        .card .card-icon { font-size: 70px; margin-bottom: 12px; }
+        .card h3 { 
+            font-size: 1.6em !important; 
+            color: #2A3820 !important;
+        }
+        .card p { 
+            font-size: 0.9em !important; 
+            margin-bottom: 18px !important; 
+            color: #5A6B45 !important;
+        }
+        .card-features li { 
+            padding: 6px 0 !important; 
+            font-size: 0.88em !important; 
+            color: #5A6B45 !important;
+        }
+        .card:hover .card-icon { transform: scale(1.15) rotate(5deg); }
+
+        /* User Role Cards — OLIVE THEMED */
+        .card-farmer { background: linear-gradient(135deg, #FFFFFF 0%, #F0F5E5 100%) !important; }
+        .card-farmer .card-badge { background: linear-gradient(135deg, #C9D6AA, #B8C998) !important; color: #3A4D2C !important; }
+        .card-farmer .card-btn { background: linear-gradient(135deg, #3A4D2C, #5A7045) !important; color: #F7F4E9 !important; }
+        .card-farmer:hover .card-btn { background: linear-gradient(135deg, #2A3820, #3A4D2C) !important; }
+        .card-farmer:hover { box-shadow: 0 20px 60px rgba(58,77,44,0.2) !important; }
+
+        .card-driver { background: linear-gradient(135deg, #FFFFFF 0%, #EAF0DD 100%) !important; }
+        .card-driver .card-badge { background: linear-gradient(135deg, #C9D6AA, #B8C998) !important; color: #3A4D2C !important; }
+        .card-driver .card-btn { background: linear-gradient(135deg, #5A7045, #7A9159) !important; color: #F7F4E9 !important; }
+        .card-driver:hover .card-btn { background: linear-gradient(135deg, #3A4D2C, #5A7045) !important; }
+        .card-driver:hover { box-shadow: 0 20px 60px rgba(122,145,89,0.3) !important; }
+
+        .card-driver.featured::before {
+            background: linear-gradient(135deg, #3A4D2C, #C9D6AA) !important;
+        }
+        .card-ribbon {
+            background: linear-gradient(135deg, #7A9159, #5A7045) !important;
+            color: #F7F4E9 !important;
+            box-shadow: 0 4px 10px rgba(122,145,89,0.5) !important;
+        }
+
+        .card-buyer { background: linear-gradient(135deg, #FFFFFF 0%, #F0F5E5 100%) !important; }
+        .card-buyer .card-badge { background: linear-gradient(135deg, #C9D6AA, #B8C998) !important; color: #3A4D2C !important; }
+        .card-buyer .card-btn { background: linear-gradient(135deg, #5A7045, #3A4D2C) !important; color: #F7F4E9 !important; }
+        .card-buyer:hover .card-btn { background: linear-gradient(135deg, #2A3820, #3A4D2C) !important; }
+        .card-buyer:hover { box-shadow: 0 20px 60px rgba(58,77,44,0.2) !important; }
+
+        /* Tech Cards — KEEP COLORFUL (Purple/Indigo/Teal/Blue) */
+        .card-iot { background: linear-gradient(135deg, #FFFFFF 0%, #E0F7FA 100%) !important; }
+        .card-iot .card-badge { background: linear-gradient(135deg, #E0F7FA, #B2EBF2); color: #00838F; }
+        .card-iot .card-btn { background: linear-gradient(135deg, #00838F, #00ACC1); color: white; }
+        .card-iot:hover .card-btn { background: linear-gradient(135deg, #006064, #00ACC1); }
+        .card-iot:hover { box-shadow: 0 20px 60px rgba(0,131,143,0.2) !important; }
+
+        .card-ai-brain { background: linear-gradient(135deg, #FFFFFF 0%, #F3E8FF 100%) !important; }
+        .card-ai-brain .card-badge { background: linear-gradient(135deg, #F3E8FF, #E9D5FF); color: #7C3AED; }
+        .card-ai-brain .card-btn { background: linear-gradient(135deg, #7C3AED, #EC4899); color: white; }
+        .card-ai-brain:hover .card-btn { background: linear-gradient(135deg, #6D28D9, #DB2777); }
+        .card-ai-brain:hover { box-shadow: 0 20px 60px rgba(124,58,237,0.2) !important; }
+
+        .card-ml-lab { background: linear-gradient(135deg, #FFFFFF 0%, #EDE9FE 100%) !important; }
+        .card-ml-lab .card-badge { background: linear-gradient(135deg, #EDE9FE, #DDD6FE); color: #6366F1; }
+        .card-ml-lab .card-btn { background: linear-gradient(135deg, #6366F1, #8B5CF6); color: white; }
+        .card-ml-lab:hover .card-btn { background: linear-gradient(135deg, #4F46E5, #7C3AED); }
+        .card-ml-lab:hover { box-shadow: 0 20px 60px rgba(99,102,241,0.2) !important; }
+
+        .card-maps { background: linear-gradient(135deg, #FFFFFF 0%, #E3F2FD 100%) !important; }
+        .card-maps .card-badge { background: linear-gradient(135deg, #E3F2FD, #BBDEFB); color: #1565C0; }
+        .card-maps .card-btn { background: linear-gradient(135deg, #1565C0, #1976D2); color: white; }
+        .card-maps:hover .card-btn { background: linear-gradient(135deg, #0D47A1, #1565C0); }
+        .card-maps:hover { box-shadow: 0 20px 60px rgba(21,101,192,0.2) !important; }
+
+        /* Section divider */
+        .explore-divider {
+            text-align: center;
+            margin: 70px auto 40px;
+            position: relative;
+            max-width: 800px;
+        }
+        .explore-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #3A4D2C, transparent) !important;
+        }
+        .explore-divider span {
+            background: #F7F4E9 !important;
+            padding: 0 25px;
+            color: #3A4D2C !important;
+            font-weight: 700;
+            font-size: 1.1em;
+            position: relative;
+            display: inline-block;
+        }
+
+        /* ===== FEATURE CARDS ===== */
+        .feature-card {
+            background: #FFFFFF !important;
+            border: 1px solid rgba(58,77,44,0.1) !important;
+        }
+        .feature-card:hover {
+            border-color: #7A9159 !important;
+            box-shadow: 0 20px 50px rgba(58,77,44,0.15) !important;
+        }
+        .feature-card h3 { color: #2A3820 !important; }
+        .feature-card p { color: #5A6B45 !important; }
+        .feature-tag {
+            background: linear-gradient(135deg, #C9D6AA, #B8C998) !important;
+            color: #3A4D2C !important;
+        }
+
+        .feature-icon-wrapper.ai { background: linear-gradient(135deg, #C9D6AA, #B8C998) !important; }
+        .feature-icon-wrapper.iot { background: linear-gradient(135deg, #7A9159, #5A7045) !important; }
+        .feature-icon-wrapper.rewards { background: linear-gradient(135deg, #B8C998, #C9D6AA) !important; }
+        .feature-icon-wrapper.rural { background: linear-gradient(135deg, #5A7045, #3A4D2C) !important; }
+        .feature-icon-wrapper.forecast { background: linear-gradient(135deg, #C9D6AA, #7A9159) !important; }
+        .feature-icon-wrapper.sms { background: linear-gradient(135deg, #7A9159, #C9D6AA) !important; }
+
+        /* ===== STEPS ===== */
+        .step {
+            background: #F7F4E9 !important;
+            border: 1px solid rgba(58,77,44,0.15);
+        }
+        .step h3 { color: #2A3820 !important; }
+        .step p { color: #5A6B45 !important; }
+        .step-number {
+            background: linear-gradient(135deg, #3A4D2C, #7A9159) !important;
+            box-shadow: 0 6px 20px rgba(58,77,44,0.4) !important;
+            color: #F7F4E9 !important;
+        }
+        .step-arrow svg path { stroke: #3A4D2C !important; }
+
+        /* ===== TECH ITEMS ===== */
+        .tech-item {
+            background: linear-gradient(135deg, #FAF7EC, #F7F4E9) !important;
+            border: 2px solid transparent !important;
+        }
+        .tech-item:hover {
+            border-color: #7A9159 !important;
+            box-shadow: 0 15px 35px rgba(58,77,44,0.15) !important;
+        }
+        .tech-item p { color: #2A3820 !important; }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonial {
+            background: #FFFFFF !important;
+            border: 1px solid rgba(58,77,44,0.1);
+        }
+        .testimonial-quote { color: #7A9159 !important; }
+        .testimonial p { color: #3A4D2C !important; }
+        .testimonial-author strong { color: #2A3820 !important; }
+        .author-avatar {
+            background: linear-gradient(135deg, #C9D6AA, #7A9159) !important;
+        }
+
+        /* ===== IMPACT ===== */
+        .impact-section {
+            background: linear-gradient(135deg, #1F2D14, #3A4D2C, #5A7045) !important;
+        }
+        .impact-num {
+            background: linear-gradient(135deg, #C9D6AA, #F7F4E9) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+        .highlight-yellow {
+            background: linear-gradient(135deg, #C9D6AA, #F7F4E9) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+
+        /* ===== CTA ===== */
+        .cta-content h2 { color: #2A3820 !important; }
+        .cta-content p { color: #5A6B45 !important; }
+        .cta-button {
+            background: linear-gradient(135deg, #3A4D2C, #7A9159) !important;
+            color: #F7F4E9 !important;
+            box-shadow: 0 15px 40px rgba(58,77,44,0.3) !important;
+        }
+        .cta-button:hover {
+            background: linear-gradient(135deg, #2A3820, #3A4D2C) !important;
+            box-shadow: 0 20px 50px rgba(58,77,44,0.5) !important;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: linear-gradient(135deg, #1A2410, #2A3820) !important;
+            color: #F7F4E9 !important;
+        }
+        .footer-tagline { color: #C9D6AA !important; }
+        .footer-credit { color: #7A9159 !important; }
+    </style>
+</head>
+<body>
+
+    <!-- ANIMATED BACKGROUND PARTICLES -->
+    <div class="particles">
+        <div class="particle">🍅</div>
+        <div class="particle">🌾</div>
+        <div class="particle">🥬</div>
+        <div class="particle">🚛</div>
+        <div class="particle">🌽</div>
+        <div class="particle">🍎</div>
+        <div class="particle">🥕</div>
+        <div class="particle">🌱</div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-logo">
+            <span class="logo-icon">🌾</span>
+            <span class="logo-text">FarmLinks</span>
+        </div>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#how">Workflow</a>
+            <a href="#tech">Tech</a>
+            <a href="#impact">Impact</a>
+            <a href="#login" class="nav-cta">Get Started</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-bg-pattern"></div>
+        <div class="hero-orbs">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="orb orb-3"></div>
+        </div>
+        
+        <div class="hero-content">
+            
+            <h1 class="hero-title">
+                Cultivating Connections,<br>
+                <span class="gradient-text">Growing Together</span>
+            </h1>
+            
+            <p class="hero-subtitle">
+                AI-powered logistics platform connecting <strong>Farmers</strong>, <strong>Transporters</strong>, and <strong>Buyers</strong>
+                <br>Built to save India's <strong>₹92,000 Crore</strong> in post-harvest losses
+            </p>
+            
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-number" data-target="92000">0</div>
+                    <div class="stat-suffix">Cr</div>
+                    <div class="stat-label">Annual Savings Potential</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <div class="stat-number" data-target="60">0</div>
+                    <div class="stat-suffix">%</div>
+                    <div class="stat-label">Cost Reduction</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <div class="stat-number" data-target="85">0</div>
+                    <div class="stat-suffix">%</div>
+                    <div class="stat-label">On-Time Delivery</div>
+                </div>
+            </div>
+            
+            
+            <div class="hero-trust">
+                <p>Trusted Technology Stack:</p>
+                <div class="trust-icons">
+                    <span>🤖 AI/ML</span>
+                    <span>📡 IoT</span>
+                    <span>🔒 Secure</span>
+                    <span>📱 SMS Ready</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hero-wave">
+            <svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                <path d="M0,64 C240,100 480,30 720,60 C960,90 1200,40 1440,70 L1440,120 L0,120 Z" fill="#F7F4E9"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- LOGIN CARDS SECTION -->
+    <section id="login" class="login-section">
+        <div class="section-header">
+            <div class="section-tag">YOUR JOURNEY STARTS HERE</div>
+            <h2>One Platform. <span class="highlight">Endless Possibilities.</span></h2>
+            <p>Choose your role and step into the future of agriculture</p>
+        </div>
+
+        <!-- ROW 1: USER ROLES -->
+        <div class="cards-row-3">
+
+            <a href="/farmer" class="card card-farmer">
+                <div class="card-glow"></div>
+                <div class="card-badge">For Producers</div>
+                <div class="card-icon">👨‍🌾</div>
+                <h3>Farmer</h3>
+                <p>Request transport for your crops with AI-matched drivers</p>
+                <ul class="card-features">
+                    <li>✓ Smart pickup requests</li>
+                    <li>✓ Live GPS tracking</li>
+                    <li>✓ SMS notifications</li>
+                    <li>✓ Direct buyer access</li>
+                </ul>
+                <span class="card-btn">
+                    Login as Farmer
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </span>
+            </a>
+
+            <a href="/driver" class="card card-driver featured">
+                <div class="card-glow"></div>
+                <div class="card-badge">For Transporters</div>
+                <div class="card-icon">🚛</div>
+                <h3>Transporter</h3>
+                <p>Get optimized routes & earn rewards for reliability</p>
+                <ul class="card-features">
+                    <li>✓ Multi-stop routes</li>
+                    <li>✓ Points & badges system</li>
+                    <li>✓ UPI auto-payments</li>
+                    <li>✓ Tier-based bonuses</li>
+                </ul>
+                <span class="card-btn">
+                    Login as Driver
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </span>
+            </a>
+
+            <a href="/buyer" class="card card-buyer">
+                <div class="card-glow"></div>
+                <div class="card-badge">For Markets</div>
+                <div class="card-icon">🏪</div>
+                <h3>Buyer</h3>
+                <p>Order fresh crops directly from farmers in your area</p>
+                <ul class="card-features">
+                    <li>✓ Browse marketplace</li>
+                    <li>✓ Live ETA tracking</li>
+                    <li>✓ IoT quality data</li>
+                    <li>✓ Pre-order from harvests</li>
+                </ul>
+                <span class="card-btn">
+                    Login as Buyer
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </span>
+            </a>
+
+        </div>
+
+        <!-- DIVIDER -->
+        <div class="explore-divider">
+            <span>🚀 Discover Our Intelligence Stack</span>
+        </div>
+
+        <!-- ROW 2: TECH DEMOS -->
+        <div class="cards-row-4">
+
+            <a href="/ai-brain" class="card card-ai-brain">
+                <div class="card-glow"></div>
+                <div class="card-badge">🧠 The Brain</div>
+                <div class="card-icon">🧠</div>
+                <h3>AI Brain</h3>
+                <p>Watch AI process farmer requests in 0.6s</p>
+                <ul class="card-features">
+                    <li>✓ NLP message parsing</li>
+                    <li>✓ Geo-clustering demo</li>
+                    <li>✓ Urgency scoring</li>
+                    <li>✓ Live AI pipeline</li>
+                </ul>
+                <span class="card-btn">
+                    Explore AI Engine
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </span>
+            </a>
+
+            <a href="/ml-lab" class="card card-ml-lab">
+                <div class="card-glow"></div>
+                <div class="card-badge">🤖 Real ML</div>
+                <div class="card-icon">🧪</div>
+                <h3>ML Lab</h3>
+                <p>Test 3 trained ML models with live predictions</p>
+                <ul class="card-features">
+                    <li>✓ Driver match predictor</li>
+                    <li>✓ Price forecaster</li>
+                    <li>✓ Spoilage classifier</li>
+                    <li>✓ Random Forest + GBM</li>
+                </ul>
+                <span class="card-btn">
+                    Open ML Lab
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </span>
+            </a>
+
+            <a href="/iot" class="card card-iot">
+                <div class="card-glow"></div>
+                <div class="card-badge">🟢 Live Monitoring</div>
+                <div class="card-icon">📡</div>
+                <h3>IoT Tracking</h3>
+                <p>Real-time cold-chain monitoring with sensors</p>
+                <ul class="card-features">
+                    <li>✓ Live sensor data</li>
+                    <li>✓ Temperature alerts</li>
+                    <li>✓ GPS tracking</li>
+                    <li>✓ Smart notifications</li>
+                </ul>
+                <span class="card-btn">
+                    View Live Dashboard
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </span>
+            </a>
+
+            <a href="/maps" class="card card-maps">
+                <div class="card-glow"></div>
+                <div class="card-badge">🗺️ Live Maps</div>
+                <div class="card-icon">🗺️</div>
+                <h3>Maps & Routes</h3>
+                <p>Interactive map with AI route optimization</p>
+                <ul class="card-features">
+                    <li>✓ Real-time GPS markers</li>
+                    <li>✓ Nearest neighbor algo</li>
+                    <li>✓ Multi-stop optimization</li>
+                    <li>✓ 60% fuel savings</li>
+                </ul>
+                <span class="card-btn">
+                    Open Live Map
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </span>
+            </a>
+
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section id="features" class="features-section">
+        <div class="section-header">
+            <div class="section-tag">CORE CAPABILITIES</div>
+            <h2>Built for Hearts. <span class="highlight">Engineered for Impact.</span></h2>
+            <p>Every feature designed to solve actual rural challenges</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon-wrapper ai">🤖</div>
+                <h3>AI-Powered Matching</h3>
+                <p>Smart multi-factor algorithm matches farmers with the best driver in under 1 second</p>
+                <div class="feature-tag">Machine Learning</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon-wrapper iot">📡</div>
+                <h3>Live IoT Tracking</h3>
+                <p>Real-time GPS + temperature sensors monitor your crops throughout the journey</p>
+                <div class="feature-tag">IoT</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon-wrapper rewards">🏆</div>
+                <h3>Driver Rewards</h3>
+                <p>Bronze to Diamond tiers reward loyal drivers with bonus pay & priority routes</p>
+                <div class="feature-tag">Gamification</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon-wrapper rural">🌍</div>
+                <h3>Rural-First Design</h3>
+                <p>Works with bad roads, perishable crops, and small farmers across all regions</p>
+                <div class="feature-tag">Accessibility</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon-wrapper forecast">📊</div>
+                <h3>Demand Forecasting</h3>
+                <p>AI predicts harvest spikes 2 weeks in advance — no more chaos during seasons</p>
+                <div class="feature-tag">Predictive AI</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon-wrapper sms">📲</div>
+                <h3>SMS Alerts</h3>
+                <p>Real-time updates at every step — farmers know exactly when truck arrives</p>
+                <div class="feature-tag">Notifications</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WORKFLOW SECTION -->
+    <section id="how" class="how-section">
+        <div class="section-header">
+            <div class="section-tag">WORKFLOW</div>
+            <h2>From Field to <span class="highlight">Fortune</span></h2>
+            <p>Your harvest journey in 4 seamless steps</p>
+        </div>
+
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-icon">📝</div>
+                <h3>Farmer Requests</h3>
+                <p>Submit crop details, quantity & pickup time</p>
+            </div>
+
+            <div class="step-arrow">
+                <svg width="40" height="20" viewBox="0 0 40 20" fill="none">
+                    <path d="M0 10h36m-6-6l6 6-6 6" stroke="#3A4D2C" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-icon">🤖</div>
+                <h3>AI Matches</h3>
+                <p>Smart algorithm finds best driver in 1 sec</p>
+            </div>
+
+            <div class="step-arrow">
+                <svg width="40" height="20" viewBox="0 0 40 20" fill="none">
+                    <path d="M0 10h36m-6-6l6 6-6 6" stroke="#3A4D2C" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-icon">🚛</div>
+                <h3>Live Tracking</h3>
+                <p>Track truck in real-time with IoT sensors</p>
+            </div>
+
+            <div class="step-arrow">
+                <svg width="40" height="20" viewBox="0 0 40 20" fill="none">
+                    <path d="M0 10h36m-6-6l6 6-6 6" stroke="#3A4D2C" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-icon">✅</div>
+                <h3>Fresh Delivery</h3>
+                <p>Crops delivered fresh, instant UPI payment</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- TECH STACK SECTION -->
+    <section id="tech" class="tech-section">
+        <div class="section-header">
+            <div class="section-tag">TECH STACK</div>
+            <h2>Crafted with Care, <span class="highlight">Powered by Innovation</span></h2>
+            <p>Battle-tested tools delivering production-ready solutions</p>
+        </div>
+
+        <div class="tech-grid">
+            <div class="tech-item"><span>🐍</span><p>Python</p></div>
+            <div class="tech-item"><span>⚡</span><p>Flask</p></div>
+            <div class="tech-item"><span>🤖</span><p>scikit-learn</p></div>
+            <div class="tech-item"><span>📡</span><p>IoT Sensors</p></div>
+            <div class="tech-item"><span>🗄️</span><p>SQLite</p></div>
+            <div class="tech-item"><span>🗺️</span><p>Leaflet.js</p></div>
+            <div class="tech-item"><span>📱</span><p>SMS Gateway</p></div>
+            <div class="tech-item"><span>💳</span><p>UPI</p></div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials-section">
+        <div class="section-header">
+            <div class="section-tag">VOICES FROM THE FIELD</div>
+            <h2>Real Farmers. Real Stories. <span class="highlight">Real Change.</span></h2>
+        </div>
+
+        <div class="testimonials-grid">
+            <div class="testimonial">
+                <div class="testimonial-quote">"</div>
+                <p>"Earlier I lost ₹15,000 every month to spoiled crops. With FarmLinks, my tomatoes reach Pune in 2 hours."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">👨‍🌾</div>
+                    <div>
+                        <strong>A Farmer</strong>
+                        <span>Nashik, Maharashtra</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial">
+                <div class="testimonial-quote">"</div>
+                <p>"I earn ₹1,200 per day now with batched routes. The Points system rewards me for being on time!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">🚛</div>
+                    <div>
+                        <strong>A Transporter</strong>
+                        <span>Pune, Maharashtra</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial">
+                <div class="testimonial-quote">"</div>
+                <p>"I get fresh produce daily with quality data from IoT sensors. My customers love the consistency!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">🏪</div>
+                    <div>
+                        <strong>A Buyer</strong>
+                        <span>Mumbai, Maharashtra</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IMPACT SECTION -->
+    <section id="impact" class="impact-section">
+        <div class="impact-bg-pattern"></div>
+        <div class="impact-content">
+            <div class="section-tag light">3-YEAR VISION</div>
+            <h2>Transforming <span class="highlight-yellow">Rural India</span></h2>
+            <p class="impact-subtitle">Our roadmap to revolutionize agricultural logistics</p>
+            
+            <div class="impact-grid">
+                <div class="impact-item">
+                    <div class="impact-num">10L+</div>
+                    <p>Farmers Served</p>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-num">₹500Cr</div>
+                    <p>Additional Income</p>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-num">70%</div>
+                    <p>Less Spoilage</p>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-num">2L+</div>
+                    <p>Driver Jobs</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Be Part of India's Greenest Revolution</h2>
+            <p>Join thousands of farmers, drivers, and buyers building a brighter agricultural future</p>
+                    <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span class="logo-icon">🌾</span>
+                <span>FarmLinks</span>
+            </div>
+            <p class="footer-tagline">"No farmer should ever lose another harvest to a missed truck."</p>
+            <div class="footer-links">
+                <a href="#features">Features</a>
+                <a href="#how">Workflow</a>
+                <a href="#impact">Impact</a>
+                <a href="#login">Get Started</a>
+            </div>
+            <p class="footer-credit">💚 Built with ❤️ for Rural India | AgriTech Hackathon 2024</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) navbar.classList.add('scrolled');
+            else navbar.classList.remove('scrolled');
+        });
+
+        const animateCounter = (element, target) => {
+            let current = 0;
+            const increment = target / 60;
+            const stepTime = 2000 / 60;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) { current = target; clearInterval(timer); }
+                if (target >= 1000) element.textContent = Math.floor(current).toLocaleString('en-IN');
+                else element.textContent = Math.floor(current);
+            }, stepTime);
+        };
+
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounter(entry.target, parseInt(entry.target.dataset.target));
+                    counterObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stat-number').forEach(el => counterObserver.observe(el));
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('revealed');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.feature-card, .step, .testimonial, .impact-item, .tech-item').forEach(el => {
+            el.classList.add('reveal');
+            revealObserver.observe(el);
+        });
+
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const rotateX = (y - rect.height / 2) / 25;
+                const rotateY = (rect.width / 2 - x) / 25;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+            });
+            card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+        });
+    </script>
+
+</body>
+</html>

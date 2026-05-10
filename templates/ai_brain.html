@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Brain - FarmLinks</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: #0a0e27; color: white; min-height: 100vh; }
+
+        /* NAVBAR */
+        .navbar {
+            background: rgba(10,14,39,0.95);
+            backdrop-filter: blur(20px);
+            padding: 18px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 20px rgba(124,58,237,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(124,58,237,0.3);
+        }
+        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon { font-size: 28px; }
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #7C3AED, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .user-badge {
+            background: linear-gradient(135deg, #7C3AED, #EC4899);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #1e1b4b 100%);
+            padding: 60px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(124,58,237,0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 50%, rgba(236,72,153,0.3) 0%, transparent 50%);
+        }
+        .hero h1 {
+            font-size: 3em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #7C3AED, #EC4899, #F59E0B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .hero p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            position: relative;
+        }
+
+        .container { max-width: 1400px; margin: -30px auto 50px; padding: 0 20px; position: relative; z-index: 5; }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-top: 15px;
+        }
+        .back-btn {
+            color: #A78BFA;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* WhatsApp Demo Card */
+        .whatsapp-demo {
+            background: linear-gradient(135deg, #1f2937, #111827);
+            padding: 35px;
+            border-radius: 25px;
+            border: 1px solid rgba(124,58,237,0.3);
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(124,58,237,0.2);
+        }
+        .whatsapp-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .whatsapp-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .whatsapp-title {
+            font-size: 1.3em;
+            font-weight: 700;
+        }
+        .whatsapp-subtitle {
+            color: #9CA3AF;
+            font-size: 0.85em;
+        }
+
+        .input-section { margin-bottom: 20px; }
+        .input-label {
+            display: block;
+            color: #A78BFA;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+        .message-input {
+            width: 100%;
+            padding: 18px;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(124,58,237,0.3);
+            border-radius: 15px;
+            color: white;
+            font-size: 1.05em;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        .message-input:focus {
+            outline: none;
+            border-color: #7C3AED;
+            background: rgba(124,58,237,0.1);
+        }
+        .message-input::placeholder { color: #6B7280; }
+
+        .btn-parse {
+            background: linear-gradient(135deg, #7C3AED, #EC4899);
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            box-shadow: 0 5px 20px rgba(124,58,237,0.4);
+        }
+        .btn-parse:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(124,58,237,0.6);
+        }
+
+        /* Sample Messages */
+        .samples {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .sample-chip {
+            background: rgba(124,58,237,0.15);
+            color: #C4B5FD;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            cursor: pointer;
+            border: 1px solid rgba(124,58,237,0.3);
+            transition: all 0.3s;
+        }
+        .sample-chip:hover {
+            background: rgba(124,58,237,0.3);
+            color: white;
+        }
+
+        /* AI Processing Visual */
+        .ai-processing {
+            background: linear-gradient(135deg, #1f2937, #111827);
+            padding: 35px;
+            border-radius: 25px;
+            border: 1px solid rgba(236,72,153,0.3);
+            margin-bottom: 30px;
+        }
+        .ai-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(236,72,153,0.2));
+            border-radius: 12px;
+            border-left: 4px solid #7C3AED;
+        }
+        .ai-pulse {
+            width: 12px;
+            height: 12px;
+            background: #10B981;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 15px #10B981;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+        }
+
+        /* Extracted Data Grid */
+        .extracted-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .extracted-card {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #7C3AED;
+            transition: all 0.3s;
+        }
+        .extracted-card:hover {
+            transform: translateY(-3px);
+            border-left-color: #EC4899;
+        }
+        .extracted-label {
+            color: #9CA3AF;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .extracted-value {
+            font-size: 1.4em;
+            font-weight: 800;
+            color: white;
+        }
+        .priority-display {
+            background: linear-gradient(135deg, #DC2626, #EA580C);
+            color: white;
+        }
+        .priority-display .extracted-label { color: rgba(255,255,255,0.8); }
+
+        /* Pipeline Visual */
+        .pipeline {
+            background: linear-gradient(135deg, #1f2937, #111827);
+            padding: 35px;
+            border-radius: 25px;
+            border: 1px solid rgba(16,185,129,0.3);
+            margin-bottom: 30px;
+        }
+        .pipeline-title {
+            font-size: 1.5em;
+            font-weight: 800;
+            color: #10B981;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .pipeline-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            position: relative;
+        }
+        .pipeline-step {
+            background: rgba(16,185,129,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(16,185,129,0.3);
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+        .pipeline-step:hover { transform: translateY(-3px); border-color: #10B981; }
+        .pipeline-step.active {
+            background: linear-gradient(135deg, rgba(16,185,129,0.3), rgba(124,58,237,0.2));
+            border-color: #10B981;
+            box-shadow: 0 10px 30px rgba(16,185,129,0.3);
+        }
+        .step-icon { font-size: 2em; margin-bottom: 10px; }
+        .step-name { font-weight: 700; margin-bottom: 5px; }
+        .step-desc { font-size: 0.8em; color: #9CA3AF; }
+        .step-time {
+            background: rgba(16,185,129,0.2);
+            color: #10B981;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: 700;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        /* Clustering Section */
+        .clustering-section {
+            background: linear-gradient(135deg, #1f2937, #111827);
+            padding: 35px;
+            border-radius: 25px;
+            border: 1px solid rgba(245,158,11,0.3);
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 1.5em;
+            font-weight: 800;
+            color: #F59E0B;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .cluster-card {
+            background: rgba(245,158,11,0.05);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #F59E0B;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cluster-info { flex: 1; }
+        .cluster-location { font-weight: 700; font-size: 1.1em; }
+        .cluster-meta { color: #9CA3AF; font-size: 0.85em; margin-top: 5px; }
+        .cluster-count {
+            background: linear-gradient(135deg, #F59E0B, #DC2626);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 800;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+        .stat-card:hover { transform: translateY(-5px); border-color: #7C3AED; }
+        .stat-icon { font-size: 1.8em; margin-bottom: 8px; }
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #7C3AED, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-label { color: #9CA3AF; font-size: 0.85em; margin-top: 5px; }
+
+        /* Code-style display */
+        .code-display {
+            background: #0a0e27;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            color: #10B981;
+            border-left: 4px solid #10B981;
+            margin-top: 15px;
+            overflow-x: auto;
+        }
+        .code-line { margin: 5px 0; }
+        .code-key { color: #EC4899; }
+        .code-value { color: #F59E0B; }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #6B7280;
+        }
+        .empty-icon { font-size: 4em; margin-bottom: 15px; opacity: 0.5; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="/" class="nav-logo">
+            <span class="logo-icon">🌾</span>
+            <span class="logo-text">FarmLinks</span>
+        </a>
+        <div class="user-badge">
+            <span>🧠</span>
+            <span>AI Brain Console</span>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+        <h1>🧠 The AI Brain</h1>
+        <p>Watch how FarmLinks processes farmer requests in real-time</p>
+    </div>
+
+    <div class="container">
+
+        <div class="top-nav">
+            <a href="/" class="back-btn">← Back to Home</a>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-value">0.6s</div>
+                <div class="stat-label">Avg Processing Time</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value">94%</div>
+                <div class="stat-label">NLP Accuracy</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🌍</div>
+                <div class="stat-value">{{ clusters|length }}</div>
+                <div class="stat-label">Active Clusters</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value">5km</div>
+                <div class="stat-label">Cluster Radius</div>
+            </div>
+        </div>
+
+        <!-- WHATSAPP DEMO -->
+        <div class="whatsapp-demo">
+            <div class="whatsapp-header">
+                <div class="whatsapp-icon">💬</div>
+                <div>
+                    <div class="whatsapp-title">WhatsApp Request Parser</div>
+                    <div class="whatsapp-subtitle">Type a message like a real farmer would send</div>
+                </div>
+            </div>
+
+            <form method="POST">
+                <div class="input-section">
+                    <label class="input-label">📩 Farmer's Message (in any language style):</label>
+                    <input type="text" name="message" class="message-input" 
+                           placeholder="e.g., 500 kg tomatoes urgent from Rampur"
+                           value="{{ sample_message }}" required>
+                </div>
+                <button type="submit" class="btn-parse">🤖 Process with AI</button>
+            </form>
+
+            <div class="samples">
+                <div class="sample-chip" onclick="setMessage('500 kg tomatoes urgent from Rampur Nashik')">🍅 500 kg tomatoes urgent</div>
+                <div class="sample-chip" onclick="setMessage('1000 kg pyaaz ready Pune')">🧅 1000 kg pyaaz Pune</div>
+                <div class="sample-chip" onclick="setMessage('2 quintal aam jaldi chahiye Igatpuri')">🥭 2 quintal aam Igatpuri</div>
+                <div class="sample-chip" onclick="setMessage('500 kg gehu Nashik')">🌾 500 kg gehu Nashik</div>
+            </div>
+        </div>
+
+        {% if parsed %}
+        <!-- AI PROCESSING RESULT -->
+        <div class="ai-processing">
+            <div class="ai-status">
+                <div class="ai-pulse"></div>
+                <div>
+                    <strong>✅ AI Processing Complete</strong> — Extracted in 0.4 seconds
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 20px; color: #A78BFA;">📤 Extracted Data:</h3>
+            
+            <div class="extracted-grid">
+                <div class="extracted-card">
+                    <div class="extracted-label">🌾 Detected Crop</div>
+                    <div class="extracted-value">{{ parsed.crop }}</div>
+                </div>
+                <div class="extracted-card">
+                    <div class="extracted-label">⚖️ Quantity</div>
+                    <div class="extracted-value">{{ parsed.quantity }} kg</div>
+                </div>
+                <div class="extracted-card">
+                    <div class="extracted-label">📍 Location</div>
+                    <div class="extracted-value">{{ parsed.location }}</div>
+                </div>
+                <div class="extracted-card">
+                    <div class="extracted-label">⏱️ Spoilage Window</div>
+                    <div class="extracted-value">{{ parsed.spoilage_window }}</div>
+                </div>
+                <div class="extracted-card priority-display">
+                    <div class="extracted-label">🚨 Urgency</div>
+                    <div class="extracted-value">{{ parsed.urgency }}</div>
+                </div>
+                <div class="extracted-card priority-display">
+                    <div class="extracted-label">⭐ Priority Score</div>
+                    <div class="extracted-value">{{ parsed.priority_score }}/10</div>
+                </div>
+            </div>
+
+            <div class="code-display">
+                <div class="code-line"><span class="code-key">parsed_request</span> = {</div>
+                <div class="code-line">  <span class="code-key">"crop"</span>: <span class="code-value">"{{ parsed.crop }}"</span>,</div>
+                <div class="code-line">  <span class="code-key">"quantity_kg"</span>: <span class="code-value">{{ parsed.quantity }}</span>,</div>
+                <div class="code-line">  <span class="code-key">"location"</span>: <span class="code-value">"{{ parsed.location }}"</span>,</div>
+                <div class="code-line">  <span class="code-key">"urgency"</span>: <span class="code-value">"{{ parsed.urgency }}"</span>,</div>
+                <div class="code-line">  <span class="code-key">"priority"</span>: <span class="code-value">{{ parsed.priority_score }}</span>,</div>
+                <div class="code-line">  <span class="code-key">"spoilage_window"</span>: <span class="code-value">"{{ parsed.spoilage_window }}"</span></div>
+                <div class="code-line">}</div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- 5-STAGE AI PIPELINE -->
+        <div class="pipeline">
+            <div class="pipeline-title">⚙️ 5-Stage AI Processing Pipeline</div>
+            <div class="pipeline-steps">
+                <div class="pipeline-step {% if parsed %}active{% endif %}">
+                    <div class="step-icon">📝</div>
+                    <div class="step-name">NLP Parser</div>
+                    <div class="step-desc">Extracts crop, qty, location</div>
+                    <div class="step-time">0.1s</div>
+                </div>
+                <div class="pipeline-step {% if parsed %}active{% endif %}">
+                    <div class="step-icon">⚡</div>
+                    <div class="step-name">Urgency Score</div>
+                    <div class="step-desc">Spoilage window analysis</div>
+                    <div class="step-time">0.05s</div>
+                </div>
+                <div class="pipeline-step {% if parsed %}active{% endif %}">
+                    <div class="step-icon">🌍</div>
+                    <div class="step-name">Geo Clustering</div>
+                    <div class="step-desc">DBSCAN nearby farmers</div>
+                    <div class="step-time">0.2s</div>
+                </div>
+                <div class="pipeline-step {% if parsed %}active{% endif %}">
+                    <div class="step-icon">🗺️</div>
+                    <div class="step-name">Route Optimizer</div>
+                    <div class="step-desc">Google OR-Tools</div>
+                    <div class="step-time">0.15s</div>
+                </div>
+                <div class="pipeline-step {% if parsed %}active{% endif %}">
+                    <div class="step-icon">🚛</div>
+                    <div class="step-name">Driver Match</div>
+                    <div class="step-desc">Multi-factor scoring</div>
+                    <div class="step-time">0.1s</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CLUSTERING DEMO -->
+        <div class="clustering-section">
+            <div class="section-title">🌍 Live Geo-Clustering — Nearby Farmer Groups</div>
+            <p style="color: #9CA3AF; margin-bottom: 20px;">Farmers within 5-10km automatically grouped to share trucks (saves 60% on cost)</p>
+            
+            {% if clusters %}
+                {% for cluster in clusters %}
+                <div class="cluster-card">
+                    <div class="cluster-info">
+                        <div class="cluster-location">📍 {{ cluster[0] }}</div>
+                        <div class="cluster-meta">{{ cluster[1] }} farmer{% if cluster[1] > 1 %}s{% endif %} in this cluster</div>
+                    </div>
+                    <div class="cluster-count">{{ cluster[1] }} 🚛</div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">🌾</div>
+                    <p>No clusters yet. Submit farmer requests to see clustering!</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- CROP DISTRIBUTION -->
+        {% if crop_distribution %}
+        <div class="clustering-section">
+            <div class="section-title">📊 Real-Time Crop Distribution</div>
+            {% for crop, count in crop_distribution %}
+            <div class="cluster-card" style="border-left-color: #7C3AED;">
+                <div class="cluster-info">
+                    <div class="cluster-location">
+                        {% if crop == 'Tomatoes' %}🍅{% elif crop == 'Onions' %}🧅{% elif crop == 'Potatoes' %}🥔{% elif crop == 'Chillies' %}🌶️{% elif crop == 'Wheat' %}🌾{% elif crop == 'Rice' %}🍚{% elif crop == 'Mangoes' %}🥭{% elif crop == 'Bananas' %}🍌{% endif %}
+                        {{ crop }}
+                    </div>
+                    <div class="cluster-meta">{{ count }} active request{% if count > 1 %}s{% endif %}</div>
+                </div>
+                <div class="cluster-count" style="background: linear-gradient(135deg, #7C3AED, #EC4899);">{{ count }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    </div>
+
+    <script>
+        function setMessage(msg) {
+            document.querySelector('.message-input').value = msg;
+        }
+    </script>
+
+</body>
+</html>

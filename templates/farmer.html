@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Farmer Dashboard - FarmLinks</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: #f5f9f5; color: #1a2e1a; }
+
+        .navbar {
+            background: white;
+            padding: 18px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo-icon { font-size: 28px; }
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2E7D32, #43A047);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .user-badge {
+            background: linear-gradient(135deg, #2E7D32, #43A047);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .farmer-hero {
+            background: linear-gradient(135deg, #1B5E20, #2E7D32);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+        }
+        .farmer-hero h1 {
+            font-size: 2.5em;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        .farmer-hero p { font-size: 1.1em; opacity: 0.9; }
+
+        .container {
+            max-width: 1300px;
+            margin: -30px auto 50px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 30px;
+        }
+        @media (max-width: 968px) {
+            .container { grid-template-columns: 1fr; }
+        }
+
+        .form-card {
+            background: white;
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+        .form-card h2 {
+            color: #1B5E20;
+            font-size: 1.8em;
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+        .form-subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+        @media (max-width: 600px) {
+            .form-row { grid-template-columns: 1fr; }
+        }
+
+        .form-group { margin-bottom: 18px; }
+
+        label {
+            display: block;
+            color: #1B5E20;
+            font-weight: 700;
+            margin-bottom: 6px;
+            font-size: 0.9em;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1em;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #2E7D32;
+            box-shadow: 0 0 0 4px rgba(46,125,50,0.1);
+        }
+
+        textarea { resize: vertical; min-height: 70px; }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #F9A825, #FF6F00);
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 8px 25px rgba(249,168,37,0.3);
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(249,168,37,0.5);
+        }
+
+        .ai-badge {
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+            color: #2E7D32;
+            padding: 12px 18px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9em;
+            border-left: 4px solid #2E7D32;
+        }
+
+        .ai-badge .pulse {
+            width: 10px;
+            height: 10px;
+            background: #2E7D32;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+        }
+
+        .history-card {
+            background: white;
+            padding: 35px;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            height: fit-content;
+        }
+        .history-card h2 {
+            color: #1B5E20;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .request-item {
+            background: linear-gradient(135deg, #f9f9f9, #f0f9f0);
+            padding: 18px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #2E7D32;
+            transition: transform 0.3s;
+        }
+
+        .request-item:hover { transform: translateX(5px); }
+
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .request-crop {
+            font-weight: 700;
+            color: #1B5E20;
+            font-size: 1.05em;
+        }
+
+        .status-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 700;
+        }
+
+        .status-badge.pending { background: #FF9800; }
+
+        .request-detail {
+            color: #555;
+            font-size: 0.9em;
+            margin: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+        .empty-state .icon { font-size: 60px; margin-bottom: 15px; }
+
+        .error-box {
+            background: #FFEBEE;
+            color: #C62828;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #C62828;
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .stat-mini {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .stat-mini .num {
+            font-size: 1.8em;
+            font-weight: 800;
+            color: #2E7D32;
+        }
+        .stat-mini .lbl {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/" class="nav-logo">
+            <span class="logo-icon">🌾</span>
+            <span class="logo-text">FarmLinks</span>
+        </a>
+        <div class="user-badge">
+            <span>👨‍🌾</span>
+            <span>Farmer Dashboard</span>
+        </div>
+    </nav>
+
+    <div class="farmer-hero">
+        <h1>👋 Hello, Farmer!</h1>
+        <p>Request transport for your crops in just 60 seconds</p>
+    </div>
+
+    <div class="container">
+
+        <div class="form-card">
+            <h2>📋 Request Transport</h2>
+            <p class="form-subtitle">Fill the details — our AI will match you with the best driver instantly</p>
+
+            <div class="ai-badge">
+                <span class="pulse"></span>
+                <span><strong>AI Matching Active</strong> — We'll find your driver in under 1 second</span>
+            </div>
+
+            {% if error %}
+            <div class="error-box">⚠️ {{ error }}</div>
+            {% endif %}
+
+            <form method="POST" action="/farmer">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>👤 Your Name</label>
+                        <input type="text" name="farmer_name" required placeholder="e.g., Ramesh">
+                    </div>
+                    <div class="form-group">
+                        <label>📱 Phone Number</label>
+                        <input type="tel" name="phone" required placeholder="+91 98765 43210">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>🌾 Crop Type</label>
+                        <select name="crop_type" required>
+                            <option value="">Select crop...</option>
+                            <option value="Tomatoes">🍅 Tomatoes (Highly Perishable)</option>
+                            <option value="Onions">🧅 Onions</option>
+                            <option value="Potatoes">🥔 Potatoes</option>
+                            <option value="Chillies">🌶️ Chillies (Highly Perishable)</option>
+                            <option value="Wheat">🌾 Wheat</option>
+                            <option value="Rice">🍚 Rice</option>
+                            <option value="Mangoes">🥭 Mangoes (Perishable)</option>
+                            <option value="Bananas">🍌 Bananas (Perishable)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>⚖️ Quantity (kg)</label>
+                        <input type="number" name="quantity" required placeholder="e.g., 500" min="50">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>📍 Pickup Location</label>
+                    <input type="text" name="pickup_location" required placeholder="e.g., Village Igatpuri, Nashik">
+                </div>
+
+                <div class="form-group">
+                    <label>🏪 Destination</label>
+                    <input type="text" name="destination" required placeholder="e.g., Nashik Mandi / Pune APMC">
+                </div>
+
+                <div class="form-group">
+                    <label>⏰ Preferred Pickup Time</label>
+                    <input type="datetime-local" name="pickup_time" required>
+                </div>
+
+                <div class="form-group">
+                    <label>📝 Special Notes (Optional)</label>
+                    <textarea name="notes" placeholder="e.g., Fragile crops, handle with care"></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    🤖 Find Best Driver Now
+                </button>
+            </form>
+        </div>
+
+        <div>
+            <div class="quick-stats">
+                <div class="stat-mini">
+                    <div class="num">{{ requests|length if requests else 0 }}</div>
+                    <div class="lbl">Total Requests</div>
+                </div>
+                <div class="stat-mini">
+                    <div class="num">60%</div>
+                    <div class="lbl">Cost Saved</div>
+                </div>
+                <div class="stat-mini">
+                    <div class="num">4.8⭐</div>
+                    <div class="lbl">Avg Rating</div>
+                </div>
+            </div>
+
+            <div class="history-card">
+                <h2>📦 Recent Requests</h2>
+
+                {% if requests %}
+                    {% for r in requests %}
+                    <div class="request-item">
+                        <div class="request-header">
+                            <span class="request-crop">{{ r[3] }} — {{ r[4] }} kg</span>
+                            <span class="status-badge {% if r[9] == 'Pending' %}pending{% endif %}">{{ r[9] }}</span>
+                        </div>
+                        <div class="request-detail">📍 {{ r[5] }} → {{ r[6] }}</div>
+                        <div class="request-detail">⏰ {{ r[7] }}</div>
+                        {% if r[10] %}
+                        <div class="request-detail">🚛 Driver: <strong>{{ r[10] }}</strong> ({{ r[11] }}) ⭐{{ r[12] }}</div>
+                        <div class="request-detail">💰 Cost: ₹{{ r[14] }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <div class="icon">📭</div>
+                        <p>No requests yet.</p>
+                        <p style="font-size: 0.9em; margin-top: 5px;">Submit your first request to see it here!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
