@@ -60,5 +60,3 @@ India loses **₹92,000 Crore** every year due to post-harvest logistics failure
 - Quality data via IoT sensors
 
 ---
-
-## 📦 Installation
